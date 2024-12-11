@@ -2,7 +2,6 @@ import { Router } from 'express'
 import { categoryRoutes } from '../modules/category/category.routes'
 import { productRoutes } from '../modules/products/product.routes'
 
-
 const router = Router()
 
 const moduleRoutes = [

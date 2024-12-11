@@ -1,61 +1,54 @@
-import httpStatus from "http-status";
-import { AppError } from "../../errors/AppError";
-import { TProduct } from "./product.types";
-import { Product } from "./product.model";
-import { Category } from "../category/category.model";
+import httpStatus from 'http-status'
+import { AppError } from '../../errors/AppError'
+import { TProduct } from './product.types'
+import { Product } from './product.model'
+import { Category } from '../category/category.model'
 
+const addProduct = async (payload: TProduct) => {
+  const category = await Category.findOne({ name: 'Uncategorized' })
 
+  payload.category = category?._id
 
-const addProduct = async (payload:TProduct)=>{
+  const product = await Product.create(payload)
 
-    const category= await Category.findOne({name:'Uncategorized'})  
-    
-    payload.category= category?._id
+  if (!product?._id) {
+    throw new AppError(httpStatus.FAILED_DEPENDENCY, 'Product not created!')
+  }
 
-    const product = await Product.create(payload)
-
-   
-
-    if (!product?._id){
-        throw new AppError(httpStatus.FAILED_DEPENDENCY, "Product not created!")
-    }
-
-    return product
+  return product
 }
 
+const getAllProduct = async () => {
+  const products = await Product.find({}).populate('category')
 
-const getAllProduct = async()=>{
-
-    const products = await Product.find({}).populate("category")
-
-      return products
+  return products
 }
 
+const updateProduct = async (id: string, payload: Partial<TProduct>) => {
+  const newProduct = await Product.findOneAndUpdate({ _id: id }, payload, {
+    new: true,
+  })
 
-const updateProduct = async (id:string,payload:Partial<TProduct>)=>{
+  if (!newProduct?._id) {
+    throw new AppError(httpStatus.FAILED_DEPENDENCY, 'Product not updated!')
+  }
 
-    const newProduct = await Product.findOneAndUpdate({_id:id},payload,{new:true})
-
-    if (!newProduct?._id){
-        throw new AppError(httpStatus.FAILED_DEPENDENCY, "Product not updated!")
-    }
-
-    return newProduct
+  return newProduct
 }
 
-const deleteProduct = async (id:string) => {
-    const deletedProduct = await Product.deleteOne({_id:id})
+const deleteProduct = async (id: string) => {
+  const deletedProduct = await Product.deleteOne({ _id: id })
 
-    if (!deletedProduct?.deletedCount){
-        throw new AppError(httpStatus.FAILED_DEPENDENCY, "Product not deleted!")
-    }
+  if (!deletedProduct?.deletedCount) {
+    throw new AppError(httpStatus.FAILED_DEPENDENCY, 'Product not deleted!')
+  }
 
-    return deletedProduct
+  return deletedProduct
 }
 
-export const productServices= {
-    addProduct,
-    getAllProduct,
-    updateProduct,
-    deleteProduct
+export const productServices = {
+  addProduct,
+  getAllProduct,
+  updateProduct,
+  deleteProduct,
 }

@@ -24,35 +24,8 @@ const getAllCategory = catchAsync(async (req, res) => {
   })
 })
 
-const updateCategory = catchAsync(async (req, res) => {
-  const id = req.params.id
-
-  const result = await categoryServices.updateCategory(id, req.body)
-
-  response(res, {
-    statusCode: 200,
-    success: true,
-    message: '',
-    data: result,
-  })
-})
-
-const deleteCategory = catchAsync(async (req, res) => {
-  const id = req.params.id
-
-  const result = await categoryServices.deleteCategory(id)
-
-  response(res, {
-    statusCode: 200,
-    success: true,
-    message: '',
-    data: result,
-  })
-})
 
 export const categoryControllers = {
   addCategory,
-  getAllCategory,
-  updateCategory,
-  deleteCategory,
+  getAllCategory
 }
