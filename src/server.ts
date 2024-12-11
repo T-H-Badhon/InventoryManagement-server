@@ -1,18 +1,19 @@
 import mongoose from 'mongoose'
 import app from './app'
+import { config } from './app/config/config'
 import { Server } from 'http'
 import { seedUncategory } from './app/utilities/SeedUncategory'
 
 let server: Server
 
- async function main() {
- await mongoose.connect("mongodb+srv://level2-admin:level2pass@cluster0.3qumfwu.mongodb.net/inventorymanagement?retryWrites=true&w=majority")
+function main() {
+  mongoose.connect(config.db_url as string)
 
-  server = app.listen(4000, () => {
-    console.log(`app listening on port ${4000}`)
+  server = app.listen(config.port, () => {
+    console.log(`app listening on port ${config.port}`)
   })
 
-  await seedUncategory()
+  seedUncategory()
 }
 
 main()
