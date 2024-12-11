@@ -5,14 +5,14 @@ import { seedUncategory } from './app/utilities/SeedUncategory'
 
 let server: Server
 
-function main() {
+ async function main() {
   mongoose.connect("mongodb+srv://level2-admin:level2pass@cluster0.3qumfwu.mongodb.net/inventorymanagement?retryWrites=true&w=majority")
 
   server = app.listen(4000, () => {
     console.log(`app listening on port ${4000}`)
   })
 
-  seedUncategory()
+  await seedUncategory()
 }
 
 main()
